@@ -11,17 +11,24 @@ const productSchema = new mongoose.Schema(
 		price: {
 			type: Number,
 			required: [true, 'Product price is required'],
-			minLength: [0, 'Price must be positive'],
+			min: [0, 'Price must be positive'],
+			maxLength: [5, 'Product price must be less than 10 characters'],
 		},
 		description: {
 			type: String,
-            trim: true,
-            required: [true, 'Product description is required'],
-			maxLength: [500, 'Product description must be less than 500 characters'],
+			trim: true,
 		},
+		photos: [
+			{
+				secure_url: {
+					type: String,
+					required: [true, 'Product photo is required'],
+				},
+			},
+		],
 		stock: {
-            type: Number,
-            minLength: [0, 'Stock must be positive'],
+			type: Number,
+			min: [0, 'Stock must be positive'],
 			default: 0,
 		},
 		sold: {
@@ -31,7 +38,6 @@ const productSchema = new mongoose.Schema(
 		collectionId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Collection',
-			required: [true, 'Product collection is required'],
 		},
 	},
 	{ timestamps: true, versionKey: false }
