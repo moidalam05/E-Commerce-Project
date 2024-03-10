@@ -4,7 +4,13 @@ import User from '../models/user.schema.js';
 import asyncHandler from '../service/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
 
-const signUp = asyncHandler(async (req, res) => {
+export const cookieOptions = {
+	expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+	httpOnly: true,
+};
+
+//Signup a new user
+export const signUp = asyncHandler(async (req, res) => {
 	// get the data from the request body or user
 	const { name, email, password } = req.body;
 
@@ -32,6 +38,9 @@ const signUp = asyncHandler(async (req, res) => {
 	const user = await User.create({ name, email, password });
 	const token = user.getJWTtoken();
 	user.password = undefined;
+
+	// store the token in the user's cookie
+	res.cookie('token', token, cookieOptions);
 
 	// send the response to the user
 	res.status(200).json({ success: true, user, token });
