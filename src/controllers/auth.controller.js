@@ -1,5 +1,3 @@
-// Signup controller
-
 import User from '../models/user.schema.js';
 import asyncHandler from '../service/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
@@ -8,6 +6,13 @@ export const cookieOptions = {
 	expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
 	httpOnly: true,
 };
+
+/*******************************************************
+ * @SIGNUP
+ * @route http://localhost:5000/api/v1/auth/signup
+ * @description Signup a new user
+ * @returns {Object} - user, token
+ *******************************************************/
 
 //Signup a new user
 export const signUp = asyncHandler(async (req, res) => {
