@@ -115,3 +115,19 @@ export const signOut = asyncHandler(async (req, res) => {
 
 	res.status(200).json({ success: true, message: 'Logged out successfully' });
 });
+
+/*******************************************************
+ * @GET_PROFILE
+ * @route http://localhost:5000/api/v1/auth/getProfile
+ * @description getProfile of the user
+ * @returns {Object} - user
+ *******************************************************/
+
+// get the user profile
+export const getProfile = asyncHandler(async (req, res) => {
+	const { user } = req;
+	if (!user) {
+		throw new CustomError('User not found', 404);
+	}
+	res.status(200).json({ success: true, user });
+});
