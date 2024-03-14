@@ -38,6 +38,7 @@ const productSchema = new mongoose.Schema(
 		collectionId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Collection',
+			required: [true, 'Product collection is required'],
 		},
 	},
 	{ timestamps: true, versionKey: false }
