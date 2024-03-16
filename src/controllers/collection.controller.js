@@ -30,7 +30,7 @@ export const getCollection = asyncHandler(async (req, res) => {
 });
 
 // get all collections
-export const getCollections = asyncHandler(async (req, res) => {
+export const getAllCollections = asyncHandler(async (req, res) => {
 	const collections = await Collection.find();
 	if (!collections) {
 		throw new CustomError('No collections found', 404);

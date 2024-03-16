@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import {
-	createCoupon,
-	getAllCoupon,
-	deleteCoupon,
-	updateCoupon,
-} from '../controllers/coupon.controller.js';
+	createCollection,
+	deleteCollection,
+	updateCollection,
+	getAllCollections,
+	getCollection,
+} from '../controllers/collection.controller.js';
 import { isSignedIn, authorize } from '../middlewares/auth.middleware.js';
 import AuthRoles from '../utils/authRoles.js';
 const router = Router();
@@ -13,28 +14,25 @@ router.post(
 	'/',
 	isSignedIn,
 	authorize(AuthRoles.ADMIN, AuthRoles.MODERATOR),
-	createCoupon
+	createCollection
+);
+
+router.get('/', getAllCollections);
+
+router.put(
+	'/:id',
+	isSignedIn,
+	authorize(AuthRoles.ADMIN, AuthRoles.MODERATOR),
+	updateCollection
 );
 
 router.delete(
 	'/:id',
 	isSignedIn,
 	authorize(AuthRoles.ADMIN, AuthRoles.MODERATOR),
-	deleteCoupon
+	deleteCollection
 );
 
-router.put(
-	'action/:id',
-	isSignedIn,
-	authorize(AuthRoles.ADMIN, AuthRoles.MODERATOR),
-	updateCoupon
-);
-
-router.get(
-	'/',
-	isSignedIn,
-	authorize(AuthRoles.ADMIN, AuthRoles.MODERATOR),
-	getAllCoupon
-);
+router.get('/:id', getCollection);
 
 export default router;
