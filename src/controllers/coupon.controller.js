@@ -97,24 +97,24 @@ export const coupon = asyncHandler(async (req, res) => {
 
 export const updateCoupon = asyncHandler(async (req, res) => {
 	const { id: couponId } = req.params;
-	const { code, discount } = req.body;
-	const coupon = await Coupon.findById(couponId);
+	const { action } = req.body;
+
+	const coupon = await Coupon.findByIdAndUpdate(
+		couponId,
+		{
+			active: action,
+		},
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
 	if (!coupon) {
 		throw new CustomError('Coupon not found', 400);
 	}
-
-	// Check if user is authorized to view coupon
-	if (req.user.role !== 'ADMIN') {
-		throw new CustomError('Unauthorized user', 403);
-	}
-
-	coupon.code = code;
-	coupon.discount = discount;
-
-	await coupon.save();
 	res.status(200).json({
 		success: true,
-		message: 'Coupon has been updated successfully',
+		message: 'Coupon updated',
 		coupon,
 	});
 });
@@ -129,7 +129,7 @@ export const updateCoupon = asyncHandler(async (req, res) => {
 
 export const deleteCoupon = asyncHandler(async (req, res) => {
 	const { id: couponId } = req.params;
-	let coupon = await Coupon.findById(couponId);
+	let coupon = await Coupon.findByIdAndDelete(couponId);
 	if (!coupon) {
 		throw new CustomError('Coupon not found', 400);
 	}
@@ -139,12 +139,8 @@ export const deleteCoupon = asyncHandler(async (req, res) => {
 		throw new CustomError('Unauthorized user', 403);
 	}
 
-	await coupon.remove();
 	res.status(200).json({
 		success: true,
 		message: 'Coupon has been deleted successfully',
 	});
 });
-
-
-
