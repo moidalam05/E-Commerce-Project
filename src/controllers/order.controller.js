@@ -74,4 +74,8 @@ export const getMyOrders = asyncHandler(async (req, res) => {});
 export const getAllOrders = asyncHandler(async (req, res) => {});
 
 // update order status: admin
-export const updateOrderStatus = asyncHandler(async (req, res) => {});
+export const updateOrderStatus = asyncHandler(async (req, res) => { });
+
+// delete order: admin
+export const deleteOrder = asyncHandler(async (req, res) => {});
+
