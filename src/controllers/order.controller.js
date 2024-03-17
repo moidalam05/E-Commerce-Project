@@ -65,7 +65,16 @@ export const generateRazorpayOrderId = asyncHandler(async (req, res) => {
 });
 
 // add order in database and update product stock after successful payment
-export const generateOrder = asyncHandler(async (req, res) => {});
+export const generateOrder = asyncHandler(async (req, res) => {
+	const {
+		transactionId,
+		product,
+		coupon,
+		amount,
+		address,
+		phoneNumber,
+	} = req.body;
+});
 
 // get only my orders
 export const getMyOrders = asyncHandler(async (req, res) => {});
@@ -74,8 +83,7 @@ export const getMyOrders = asyncHandler(async (req, res) => {});
 export const getAllOrders = asyncHandler(async (req, res) => {});
 
 // update order status: admin
-export const updateOrderStatus = asyncHandler(async (req, res) => { });
+export const updateOrderStatus = asyncHandler(async (req, res) => {});
 
 // delete order: admin
 export const deleteOrder = asyncHandler(async (req, res) => {});
-
