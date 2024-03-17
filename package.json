@@ -20,6 +20,7 @@
 		"formidable": "^3.5.1",
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.2.1",
-		"nodemailer": "^6.9.12"
+		"nodemailer": "^6.9.12",
+		"razorpay": "^2.9.2"
 	}
 }
