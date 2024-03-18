@@ -74,16 +74,107 @@ export const generateOrder = asyncHandler(async (req, res) => {
 		address,
 		phoneNumber,
 	} = req.body;
+
+	const userId = req.user._id;
+
+	// Validate request data
+	if (!transactionId || !product || !amount || !address || !phoneNumber) {
+		throw new CustomError('Please provide all required order details', 400);
+	}
+
+	// Check if the product is available and has sufficient stock
+	const existingProduct = await Product.findById(product);
+	if (!existingProduct) {
+		throw new CustomError('Product not found', 404);
+	}
+	if (existingProduct.stock < 1) {
+		throw new CustomError('Product out of stock', 400);
+	}
+
+	// Create the order
+	const order = await Order.create({
+		transactionId,
+		product,
+		coupon,
+		amount,
+		address,
+		phoneNumber,
+		user: userId,
+	});
+
+	// Update product stock
+	await Product.findByIdAndUpdate(product, { $inc: { stock: -1 } });
+	res.status(201).json({
+		success: true,
+		message: 'Order placed successfully',
+		order,
+	});
 });
 
 // get only my orders
-export const getMyOrders = asyncHandler(async (req, res) => {});
+export const getMyOrders = asyncHandler(async (req, res) => {
+	// Get the user ID from the request
+	const userId = req.user._id;
+	// Find orders belonging to the user
+	const orders = await Order.find({ user: userId }).populate('product');
+	// If no orders are found, return an error
+	if (!orders || !orders.length) {
+		return res.status(404).json({
+			success: false,
+			message: 'No orders found',
+		});
+	}
+	// Send the response
+	res.status(200).json({
+		success: true,
+		orders,
+	});
+});
 
 // get all orders: admin
-export const getAllOrders = asyncHandler(async (req, res) => {});
+export const getAllOrders = asyncHandler(async (req, res) => {
+	const orders = await Order.find({}).populate('product');
+	if (!orders || !orders.length) {
+		return res.status(404).json({ success: false, message: 'No orders found' });
+	}
+	res.status(200).json({
+		success: true,
+		orders,
+	});
+});
 
 // update order status: admin
-export const updateOrderStatus = asyncHandler(async (req, res) => {});
+export const updateOrderStatus = asyncHandler(async (req, res) => {
+	const { orderId, status } = req.body;
+	if (!orderId || !status) {
+		throw new CustomError('Please provide order ID and status', 400);
+	}
+	const order = await Order.findByIdAndUpdate(
+		orderId,
+		{ status },
+		{ new: true }
+	);
+	if (!order) {
+		throw new CustomError('Order not found', 404);
+	}
+	res.status(200).json({
+		success: true,
+		order,
+	});
+});
 
 // delete order: admin
-export const deleteOrder = asyncHandler(async (req, res) => {});
+export const deleteOrder = asyncHandler(async (req, res) => {
+	const { orderId } = req.body;
+	if (!orderId) {
+		throw new CustomError('Please provide order ID', 400);
+	}
+	const order = await Order.findByIdAndDelete(orderId);
+	if (!order) {
+		throw new CustomError('Order not found', 404);
+	}
+	res.status(200).json({
+		success: true,
+		message: 'Order deleted successfully',
+	});
+});
